@@ -47,8 +47,8 @@ app.post('/todos', function(req, res) {
 	var body = _.pick(req.body, 'description', 'completed');
 
 	// validation
-	if(!_.isString(body.description) || !_.isBoolean(body.completed) || _.isEmpty(body.description.trim())) {
-		return res.status(404).send();
+	if(!_.isString(body.description) || !_.isBoolean(body.completed) ) {
+		return res.status(400).send();
 	}
 
 	body.description = body.description.trim();
@@ -63,6 +63,20 @@ app.post('/todos', function(req, res) {
 	res.json(todos);
 });
 
+/// DELETE /todos/:id
+app.delete('/todos/:id', function(req, res) {
+ 	var todoId = parseInt(req.params.id, 10);
+   	var matchedTodo = _.findWhere(todos, {id: todoId});
 
+	if (matchedTodo) {
+		console.log('found a match');
+		todos = _.without(todos, matchedTodo);
+	} else {
+		res.status(404).send();
+	}
+	res.json(todos);
+	console.log(todos);
+
+});
 
 
